@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 80
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: {{ include "nginx-app.fullname" . }}
+#   labels:
+#     {{- include "nginx-app.labels" . | nindent 4 }}
+# spec:
+#   type: {{ .Values.service.type }}
+#   ports:
+#     - port: {{ .Values.service.port }}
+#       targetPort: http
+#       protocol: TCP
+#       name: http
+#   selector:
+#     {{- include "nginx-app.selectorLabels" . | nindent 4 }}

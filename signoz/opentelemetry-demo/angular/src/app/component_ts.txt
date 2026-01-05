@@ -1,0 +1,16 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'Angular OTEL Demo';
+
+  doClick() {
+    // simple action — will create a user interaction span (instrumentation picks clicks)
+    console.log('Button clicked!');
+    alert('Clicked!'); // optional visual feedback
+  }
+}

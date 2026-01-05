@@ -1,0 +1,4 @@
+harsh-gke.json
+*.key
+*.pem
+.env

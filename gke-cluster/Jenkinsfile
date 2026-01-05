@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+    
+    tools {
+        maven "mvn" 
+        jdk "jdk17" 
+    }
+    
+    environment {
+        // Define environment variables for GKE configuration & Docker Hub
+        DOCKER_USER = 'harshshah2004'
+        IMAGE_NAME = 'java-app'
+        TAG = '${env.BUILD_NUMBER}'
+        GKE_PROJECT_ID = 'harsh-479606'
+        GKE_CLUSTER_NAME = 'gke-safe-credential-stan-default-pool-98459305-5ft6'
+        GKE_CLUSTER_ZONE = 'us-central1-a'
+        GKE_CLUSTER_REGION = 'us-central1'
+        GKE_NAMESPACE = 'gke'
+        HELM_CHART_NAME = 'java-app'
+        HELM_RELEASE_NAME = 'java-app'
+        //GKE_CREDENTIAL_ID = 'gke'
+    }
+    
+    stages { 
+
+        stage('Build') { 
+            steps {
+                {
+				    withCredentials([usernamePassword(
+                    credentialsId: 'docker-hub_cred',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS')])
+
+                     sh 'docker login -u "$DOCKER_USER" --password-stdin'
+                     sh 'mvn -B -DskipTests clean package'
+                     sh 'docker build -t $DOCKER_USER/$IMAGE_NAME:$TAG -f Dockerfile . '
+                     sh 'docker push $DOCKER_USER/$IMAGE_NAME:$TAG'
+                }
+                
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Authenticate with Google Cloud using service account key
+                //withCredentials([file(credentialsId: 'PREPROD_GKE_KEYS', variable: 'PREPROD_GKE_KEYS')]) {
+                //    sh 'gcloud auth activate-service-account --key-file=$PREPROD_GKE_KEYS'
+
+                    // setting the project
+                    sh 'gcloud config set project $GKE_PROJECT_ID'
+
+                    // Configure kubectl to use credentials for GKE cluster
+                    sh 'gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GKE_CLUSTER_REGION --project $GKE_PROJECT_ID'
+
+                    // Delete existing application to GKE cluster using helm
+                    sh "helm delete $HELM_RELEASE_NAME --namespace $GKE_NAMESPACE"
+                
+                    // Deploy application to GKE cluster using Helm
+                    sh "helm install $HELM_RELEASE_NAME ./$HELM_CHART_NAME --namespace $GKE_NAMESPACE"
+
+                    // Running kubectl command for kustomization
+                    // sh "kubectl apply -k k8s-kustomize/patches/staging  --namespace $GKE_NAMESPACE"
+                }                             
+            }
+        }
+    }

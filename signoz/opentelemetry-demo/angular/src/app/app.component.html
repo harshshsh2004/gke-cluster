@@ -1,0 +1,15 @@
+<div class="hero">
+  <div class="hero-inner">
+    <h1>{{ title }}</h1>
+    <p class="subtitle">This Angular app is auto-instrumented with OpenTelemetry.</p>
+
+    <div class="controls">
+      <button class="primary-btn" (click)="doClick()">Go to Fancy Page</button>
+      <!-- routerLink is nice too — shows link behavior -->
+      <a routerLink="/page2" class="ghost-link">Or open the fancy page</a>
+    </div>
+  </div>
+</div>
+
+<!-- router outlet is required so other routes render inside app if you bootstrap AppComponent -->
+<router-outlet></router-outlet>

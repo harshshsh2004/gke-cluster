@@ -1,0 +1,4 @@
+<h1>{{ title }}</h1>
+<p>This Angular app is auto-instrumented with OpenTelemetry.</p>
+
+<button (click)="doClick()">Click Me</button>

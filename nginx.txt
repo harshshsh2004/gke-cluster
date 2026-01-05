@@ -1,0 +1,333 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: krishidss-ingress
+  namespace: krishidss
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "36000" 
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "36000"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "36000"
+    nginx.ingress.kubernetes.io/proxy-body-size: "500m"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET,POST"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = 'OPTIONS') {
+          return 405;
+      }
+      if ($request_uri ~* "^/krishi-dss(/|$)(.*)$") {
+        rewrite ^/krishi-dss(/|$)(.*)$ /$2 break;
+      }
+      if ($request_uri ~* "^/glowroot(/|$)(.*)$") {
+        rewrite ^/glowroot(/|$)(.*)$ /glowroot/$2 break;
+      }
+      if ($request_uri ~* "^/canalytics(/|$)(.*)$") {
+        rewrite ^/canalytics(/|$)(.*)$ /canalytics/$2 break;
+      }
+      if ($request_uri ~* "^/cww(/|$)(.*)$") {
+        rewrite ^/cww(/|$)(.*)$ /cww/$2 break;
+      }
+      if ($request_uri ~* "^/gt-dashboard(/|$)(.*)$") {
+        rewrite ^/gt-dashboard(/|$)(.*)$ /gt-dashboard/$2 break;
+      }
+      if ($request_uri ~* "^/crop-mapping(/|$)(.*)$") {
+        rewrite ^/crop-mapping(/|$)(.*)$ /crop-mapping/$2 break;
+      }
+      if ($request_uri ~* "^/bb(/|$)(.*)$") {
+        rewrite ^/bb(/|$)(.*)$ /bb/$2 break;
+      }
+      if ($request_uri ~* "^/krishi-chat(/|$)(.*)$") {
+        rewrite ^/krishi-chat(/|$)(.*)$ /krishi-chat/$2 break;
+      }
+      if ($request_uri ~* "^/dss-log(/|$)(.*)$") {
+        rewrite ^/dss-log(/|$)(.*)$ /dss-log/$2 break;
+      }
+      if ($request_uri ~* "^/national-one-soils(/|$)(.*)$") {
+        rewrite ^/national-one-soils(/|$)(.*)$ /national-one-soils/$2 break;
+      }
+      if ($request_uri ~* "^/krishi-master(/|$)(.*)$") {
+        rewrite ^/krishi-master(/|$)(.*)$ /krishi-master/$2 break;
+      }
+      if ($request_uri ~* "^/notification(/|$)(.*)$") {
+        rewrite ^/notification(/|$)(.*)$ /notification/$2 break;
+      }
+       if ($request_uri ~* "^/openapi(/|$)(.*)$") {
+        rewrite ^/openapi(/|$)(.*)$ /openapi/$2 break;
+      }
+      if ($request_uri ~* "^/user(/|$)(.*)$") {
+        rewrite ^/user(/|$)(.*)$ /user/$2 break;
+      }
+      if ($request_uri ~* "^/satellite-data(/|$)(.*)$") {
+        rewrite ^/satellite-data(/|$)(.*)$ /satellite-data/$2 break;
+      }
+      if ($request_uri ~* "^/user-management/v1/api(/|$)") {
+        rewrite ^(.*)$ $1 break;
+      }
+      more_set_headers 'Access-Control-Allow-Origin: *';
+      more_set_headers 'Access-Control-Allow-Methods: GET,POST';
+      more_set_headers 'Access-Control-Allow-Headers: DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
+      more_set_headers 'Access-Control-Allow-Credentials: true';
+      add_header X-Frame-Options "DENY always";
+      add_header X-XSS-Protection "1; mode=block always";
+      add_header X-Content-Type-Options "nosniff always";
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+      add_header Content-Security-Policy "frame-ancestors 'none';" always;
+spec:
+  tls:
+  - hosts:
+    - preprod-krishidss.da.gov.in
+    secretName: da.gov.in-secret
+  rules:
+  - host: preprod-krishidss.da.gov.in
+    http:
+      paths:
+      - path: /openapi(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: open-api-service
+            port:
+              number: 81
+      - path: /glowroot(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: crop-insurance-service
+            port:
+              number: 4000 
+      - path: /canalytics(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: crop-analytics-service
+            port:
+              number: 4000
+      - path: /cww(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: crop-weather-watch-service
+            port:
+              number: 4000 
+      - path: /gt-dashboard(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: gt-dashboard-service
+            port:
+              number: 4000  
+      - path: /crop-mapping(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: crop-mapping-service
+            port:
+              number: 4000 
+      - path: /bb(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: bund-boundary-service
+            port:
+              number: 4000  
+      - path: /krishi-chat(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-chat-service
+            port:
+              number: 4000 
+      - path: /dss-log(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-dss-log-service
+            port:
+              number: 4000 
+      - path: /national-one-soils(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: national-one-soil-service
+            port:
+              number: 4000 
+      - path: /krishi-master(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-master-service
+            port:
+              number: 4000 
+      - path: /notification(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-notification-service
+            port:
+              number: 4000  
+      - path: /user(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-user-service
+            port:
+              number: 4000 
+      - path: /satellite-data(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: satellite-data-service
+            port:
+              number: 4000  
+      # - path: /keycloak(/|$)(.*)
+      #   pathType: ImplementationSpecific
+      #   backend:
+      #     service:
+      #       name: keycloak-service
+      #       port:
+      #         number: 8080     
+      - path: /imd-service(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-imd-service
+            port:
+              number: 8989                
+      - path: /weather-watch-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: crop-weather-watch-service
+            port:
+              number: 9098
+      - path: /gt-dashboard-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: gt-dashboard-service
+            port:
+              number: 9091
+      - path: /gt-data-service-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: gt-data-service
+            port:
+              number: 8067
+      - path: /gt-service-postgres(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: gt-service-postgres
+            port:
+              number: 8888      
+      - path: /cropmapping-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: crop-mapping-service
+            port:
+              number: 8989
+      - path: /bund-boundaryapi(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: bund-boundary-service
+            port:
+              number: 9095
+      - path: /krishi-chat-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-chat-service
+            port:
+              number: 9191
+      - path: /krishi-dss-log-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-dss-log-service
+            port:
+              number: 9099
+      - path: /national-one-soil(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: national-one-soil-service
+            port:
+              number: 9096
+      - path: /krishi-dss-python(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-python-service
+            port:
+              number: 8089
+      - path: /krishi-python-satellite(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-python-satellite
+            port:
+              number: 8090         
+      - path: /master-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-master-service
+            port:
+              number: 9192
+      - path: /krishi-notification-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-notification-service
+            port:
+              number: 9993
+      - path: /user-management/v1/api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-user-service
+            port:
+              number: 8088   
+      - path: /satellite-api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: satellite-data-service
+            port:
+              number: 9089   
+      - path: /krishi-dss(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-dss-ui-service
+            port:
+              number: 80
+      - path: /crop-analytics(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: crop-analytics-service
+            port:
+              number: 9090           
+      - path: /crop-insurance(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: crop-insurance-service
+            port:
+              number: 9092                    
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: krishi-dss-ui-service
+            port:
+              number: 80
