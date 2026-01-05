@@ -51,7 +51,7 @@ pipeline {
                     sh 'gcloud config set project $GKE_PROJECT_ID'
 
                     // Configure kubectl to use credentials for GKE cluster
-                    sh 'gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GKE_CLUSTER_REGION --project $GKE_PROJECT_ID'
+                    sh 'gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone $GKE_CLUSTER_ZONE --project $GKE_PROJECT_ID'
 
                     // Delete existing application to GKE cluster using helm
                     sh "helm delete $HELM_RELEASE_NAME --namespace $GKE_NAMESPACE"
