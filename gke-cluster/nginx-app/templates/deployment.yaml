@@ -14,9 +14,11 @@ spec:
       labels:
         app: MyApp
     spec:
+      imagePullSecrets:
+      - name: dockerhub
       containers:
-      - name: nginx
-        image: nginx:1.14.2
+      - name: java-app
+        image: harshshah2004/java-app:latest
         ports:
         - containerPort: 80
 
