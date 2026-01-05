@@ -20,8 +20,10 @@ pipeline {
         HELM_RELEASE_NAME = 'java-app'
         //GKE_CREDENTIAL_ID = 'gke'
     }
-    stage('Build') {
-    steps {
+
+    stages {
+        stage('Build') {
+            steps {
         withCredentials([
             usernamePassword(
                 credentialsId: 'docker-hub_cred',
