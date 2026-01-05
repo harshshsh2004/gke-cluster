@@ -25,7 +25,6 @@ pipeline {
 
         stage('Build') { 
             steps {
-                {
 				    withCredentials([usernamePassword(
                     credentialsId: 'docker-hub_cred',
                     usernameVariable: 'DOCKER_USER',
