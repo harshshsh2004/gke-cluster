@@ -32,7 +32,7 @@ pipeline {
 				{
                      sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                      sh 'mvn -B -DskipTests clean package'
-                     sh 'docker build -t $DOCKER_USER/$IMAGE_NAME:latest -f gke-cluster/Dockerfile'
+                     sh 'docker build -t $DOCKER_USER/$IMAGE_NAME:latest -f gke-cluster/Dockerfile .'
                      sh 'docker push $DOCKER_USER/$IMAGE_NAME:latest'
                 }
                 
