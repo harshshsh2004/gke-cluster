@@ -12,7 +12,7 @@ pipeline {
         IMAGE_NAME = 'java-app'
         //TAG = '${env.BUILD_NUMBER}'
         GKE_PROJECT_ID = 'harsh-479606'
-        GKE_CLUSTER_NAME = 'gke-safe-credential-stan-default-pool-98459305-5ft6'
+        GKE_CLUSTER_NAME = 'safe-credential-standard'
         GKE_CLUSTER_ZONE = 'us-central1-a'
         GKE_CLUSTER_REGION = 'us-central1'
         GKE_NAMESPACE = 'gke'
