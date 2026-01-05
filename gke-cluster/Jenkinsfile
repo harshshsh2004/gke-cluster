@@ -10,7 +10,7 @@ pipeline {
         // Define environment variables for GKE configuration & Docker Hub
         DOCKER_USER = 'harshshah2004'
         IMAGE_NAME = 'java-app'
-        TAG = '${env.BUILD_NUMBER}'
+        //TAG = '${env.BUILD_NUMBER}'
         GKE_PROJECT_ID = 'harsh-479606'
         GKE_CLUSTER_NAME = 'gke-safe-credential-stan-default-pool-98459305-5ft6'
         GKE_CLUSTER_ZONE = 'us-central1-a'
@@ -32,8 +32,8 @@ pipeline {
 				{
                      sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                      sh 'mvn -B -DskipTests clean package'
-                     sh 'docker build -t $DOCKER_USER/$IMAGE_NAME:$TAG -f Dockerfile . '
-                     sh 'docker push $DOCKER_USER/$IMAGE_NAME:$TAG'
+                     sh 'docker build -t $DOCKER_USER/$IMAGE_NAME:latest -f gke-cluster/Dockerfile'
+                     sh 'docker push $DOCKER_USER/$IMAGE_NAME:latest'
                 }
                 
             }
