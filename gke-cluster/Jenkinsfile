@@ -57,7 +57,7 @@ pipeline {
                     //sh "helm delete $HELM_RELEASE_NAME --namespace $GKE_NAMESPACE"
                 
                     // Deploy application to GKE cluster using Helm
-                    sh "helm install $HELM_RELEASE_NAME ./$HELM_CHART_NAME --namespace $GKE_NAMESPACE"
+                    sh "helm install $HELM_RELEASE_NAME $HELM_CHART_NAME --namespace $GKE_NAMESPACE"
 
                     // Running kubectl command for kustomization
                     // sh "kubectl apply -k k8s-kustomize/patches/staging  --namespace $GKE_NAMESPACE"
