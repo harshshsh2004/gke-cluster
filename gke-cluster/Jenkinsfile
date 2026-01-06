@@ -16,7 +16,7 @@ pipeline {
         GKE_CLUSTER_ZONE = 'us-central1-a'
         //GKE_CLUSTER_REGION = 'us-central1'
         GKE_NAMESPACE = 'gke'
-        HELM_CHART_NAME = './gke-cluster'
+        HELM_CHART_NAME = 'nginx-app'
         HELM_RELEASE_NAME = 'nginx-app'
         //GKE_CREDENTIAL_ID = 'gke'
     }
