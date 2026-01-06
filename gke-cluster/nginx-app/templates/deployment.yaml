@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: java-deployment
   labels:
-    app: nginx
+    app: myapp
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: MyApp
+      app: myapp
   template:
     metadata:
       labels:
-        app: MyApp
+        app: myapp
     spec:
       imagePullSecrets:
-      - name: dockerhub
+        - name: dockerhub
       containers:
-      - name: java-app
-        image: harshshah2004/java-app:latest
-        ports:
-        - containerPort: 80
+        - name: java-app
+          image: harshshah2004/java-app:latest
+          ports:
+            - containerPort: 80
 
 # apiVersion: apps/v1
 # kind: Deployment
